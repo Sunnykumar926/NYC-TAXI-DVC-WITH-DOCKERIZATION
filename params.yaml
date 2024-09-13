@@ -1,0 +1,21 @@
+make_dataset:
+  test_size: 0.1
+  random_state: 30
+
+data_preprocessing:
+  percentiles:
+    - 0.002
+    - 0.998
+
+train_model:
+  random_forest_regressor:
+    n_estimators: 50
+    max_depth : 6
+    verbose: 2
+    n_jobs : -1
+
+    param_grid:
+      n_estimators: [50, 100, 200]
+      max_depth : [6, 9, 12] 
+      min_samples_split: [3, 6]
+      min_samples_leaf: [1, 2, 4]

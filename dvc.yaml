@@ -1,0 +1,71 @@
+stages:
+  extract_dataset:
+    cmd: python3 src/data/extract_dataset.py
+    deps:
+    - data/raw/zipped
+    - src/data/extract_dataset.py
+    outs:
+    - data/raw/extracted
+
+  make_dataset:
+    cmd: python3 src/data/make_dataset.py train.csv
+    deps:
+    - data/raw/extracted/train.csv
+    - src/data/make_dataset.py
+    params:
+    - make_dataset.random_state
+    - make_dataset.test_size
+    outs:
+    - data/interim
+
+  modify_features:
+    cmd: python3 src/features/modify_features.py data/interim/val.csv data/interim/train.csv
+      data/raw/extracted/test.csv
+    deps:
+    - data/interim/train.csv
+    - data/interim/val.csv
+    - data/raw/extracted/test.csv
+    - src/features/modify_features.py
+    outs:
+    - data/processed/transformations
+  build_features:
+    cmd: python3 src/features/build_features.py data/processed/transformations/train.csv
+      data/processed/transformations/test.csv data/processed/transformations/val.csv
+    deps:
+    - data/processed/transformations/test.csv
+    - data/processed/transformations/train.csv
+    - data/processed/transformations/val.csv
+    - src/features/build_features.py
+    outs:
+    - data/processed/build_features
+  data_preprocessing:
+    cmd: python3 src/features/data_preprocessing.py train.csv val.csv test.csv
+    deps:
+    - data/processed/build_features/test.csv
+    - data/processed/build_features/train.csv
+    - data/processed/build_features/val.csv
+    - src/features/data_preprocessing.py
+    params:
+    - data_preprocessing.percentiles
+    outs:
+    - data/processed/final
+    - models/transformers
+
+  train_model:
+    cmd: python3 src/models/train_model.py data/processed/final/train.csv
+    deps:
+    - data/processed/final/train.csv
+    - src/models/train_model.py
+    params:
+    - train_model.random_forest_regressor.max_depth
+    - train_model.random_forest_regressor.n_estimator
+    - train_model.random_forest_regressor.n_jobs
+    - train_model.random_forest_regressor.verbose
+    outs:
+    - models/models
+  model_prediction:
+    cmd: python3 src/models/predict_model.py train.csv val.csv
+    deps:
+    - data/processed/final/val.csv
+    - models/models
+    - src/models/predict_model.py
