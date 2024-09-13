@@ -1,0 +1,4 @@
+[core]
+    remote = myremote
+['remote "myremote"']
+    url = /home/sunny/Desktop/NYC-TAXI-DVC/temp/dvc1
