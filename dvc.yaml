@@ -50,15 +50,14 @@ stages:
     outs:
     - data/processed/final
     - models/transformers
-
-  train_model:
+  model_train:
     cmd: python3 src/models/train_model.py data/processed/final/train.csv
     deps:
     - data/processed/final/train.csv
     - src/models/train_model.py
     params:
     - train_model.random_forest_regressor.max_depth
-    - train_model.random_forest_regressor.n_estimator
+    - train_model.random_forest_regressor.n_estimators
     - train_model.random_forest_regressor.n_jobs
     - train_model.random_forest_regressor.verbose
     outs:

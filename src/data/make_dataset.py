@@ -65,7 +65,7 @@ def read_params(params_path: str) -> int:
 def main():
 
     # read the input file name 
-    input_file_name = 'train.csv'
+    input_file_name = sys.argv[1]
     # current file path
     current_path = Path(__file__)
     # root directory path

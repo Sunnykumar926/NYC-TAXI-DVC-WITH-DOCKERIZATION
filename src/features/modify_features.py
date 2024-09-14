@@ -22,7 +22,7 @@ modify_logger.set_log_level(level=logging.INFO)
 
 # target column is converted into minutes
 def convert_target_to_minutes(dataframe: pd.DataFrame, target_column: str) -> pd.DataFrame:
-    dataframe.loc[target_column] = dataframe[target_column]/60
+    dataframe[target_column] = dataframe[target_column]/60
     modify_logger.save_logs(msg='Target columns converted into minutes from seconds')
     return dataframe
 
@@ -50,24 +50,28 @@ def plot_target(dataframe:pd.DataFrame, target_col: str, save_path:str):
     modify_logger.save_logs(msg='The distribution of target column is saved at destination')
 
 # drop columns
-def drop_columns(dataframe:pd.DataFrame) -> pd.DataFrame:
-    modify_logger.save_logs(f'Column in data before removal are {list(dataframe.columns)}')
-
-    columns_to_drop = []
+def drop_columns(dataframe: pd.DataFrame) -> pd.DataFrame:
+    modify_logger.save_logs(f'Columns in data before removal are {list(dataframe.columns)}')
+    # drop columns from train and val data
     if 'dropoff_datetime' in dataframe.columns:
-        columns_to_drop = ['id', 'dropoff_datetime', 'store_and_fwd_flag']
+        columns_to_drop = ['id','dropoff_datetime','store_and_fwd_flag']
+        # dropping the columns from dataframe
+        dataframe_after_removal = dataframe.drop(columns=columns_to_drop)
+        list_of_columns_after_removal = list(dataframe_after_removal.columns)
+        modify_logger.save_logs(f'Columns in data after removal are {list_of_columns_after_removal}')
+        # verifying if columns dropped
+        modify_logger.save_logs(msg=f"Columns {', '.join(columns_to_drop)} dropped from data  verify={columns_to_drop not in list_of_columns_after_removal}")
+        return dataframe_after_removal
+    # drop columns from the test data
     else:
-        columns_to_drop = ['id', 'store_and_fwd_flag']
-
-    # dropping the column from data frame
-    dataframe_after_removal = dataframe.drop(columns=columns_to_drop)
-    cols_list_after_removal = list(dataframe_after_removal.columns)
-    modify_logger.save_logs(f'Columns in data after removal are {cols_list_after_removal}')
+        columns_to_drop = ['id','store_and_fwd_flag']
+        # dropping the columns from dataframe
+        dataframe_after_removal = dataframe.drop(columns=columns_to_drop)
+        list_of_columns_after_removal = list(dataframe_after_removal.columns)
+        # verifying if columns dropped
+        modify_logger.save_logs(msg=f"Columns {', '.join(columns_to_drop)} dropped from data  verify={columns_to_drop not in list_of_columns_after_removal}")
+        return dataframe_after_removal
     
-    # verify if columns dropped
-    modify_logger.save_logs(f"Columns {', '.join(columns_to_drop)} dropped from data verify={columns_to_drop not in cols_list_after_removal} ")
-    return dataframe_after_removal
-
 # making new features from datetime_columns
 def make_datetime_features(dataframe: pd.DataFrame) -> pd.DataFrame:
     # copy the original dataframe
@@ -100,8 +104,9 @@ def make_datetime_features(dataframe: pd.DataFrame) -> pd.DataFrame:
 def remove_passengers(dataframe: pd.DataFrame) -> pd.DataFrame:
     # list of passenger that required
     passenger_to_include = list(range(1, 7))
-    new_filter_df = dataframe['passenger_count'].isin(passenger_to_include)
-    new_df = dataframe.loc[new_filter_df]
+    # new_filter_df = dataframe['passenger_count'].isin(passenger_to_include)
+    new_df = dataframe[((dataframe['passenger_count']>=1) & (dataframe['passenger_count']<=7))]
+
     
     # list of unique passenger values in the passenger_count_columns
     unique_passenger_count = list(np.sort(new_df['passenger_count'].unique()))
