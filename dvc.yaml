@@ -68,3 +68,13 @@ stages:
     - data/processed/final/val.csv
     - models/models
     - src/models/predict_model.py
+
+  plot_of_result:
+    cmd: python3 src/visualization/plot_result.py train.csv val.csv
+    deps:
+    - data/processed/final/train.csv
+    - data/processed/final/val.csv
+    - models/models
+    - src/visualization/plot_result.py
+    outs:
+    - plots/model_results
