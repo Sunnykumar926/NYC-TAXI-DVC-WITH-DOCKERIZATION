@@ -55,11 +55,17 @@ stages:
     deps:
     - data/processed/final/train.csv
     - src/models/train_model.py
+
     params:
-    - train_model.random_forest_regressor.max_depth
-    - train_model.random_forest_regressor.n_estimators
-    - train_model.random_forest_regressor.n_jobs
-    - train_model.random_forest_regressor.verbose
+    - train_model.xgboost_regressor.n_estimators
+    - train_model.xgboost_regressor.max_depth
+    - train_model.xgboost_regressor.learning_rate
+    - train_model.xgboost_regressor.colsample_bytree
+    - train_model.xgboost_regressor.subsample
+    - train_model.xgboost_regressor.min_child_weight
+    - train_model.xgboost_regressor.lambda
+    - train_model.xgboost_regressor.alpha
+
     outs:
     - models/models
   model_prediction:

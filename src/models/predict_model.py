@@ -5,7 +5,7 @@ from pathlib import Path
 from sklearn.metrics import r2_score
 
 target = 'trip_duration'
-model_name = 'rf_model.joblib'
+model_name = 'xgb_model.joblib'
 
 def load_datafram(path):
     return pd.read_csv(path)

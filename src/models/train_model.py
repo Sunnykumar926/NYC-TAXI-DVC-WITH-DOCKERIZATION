@@ -4,8 +4,6 @@ import numpy as np
 import pandas as pd
 from pathlib import Path
 from xgboost import XGBRegressor
-from sklearn.ensemble import RandomForestRegressor
-# from sklearn.model_selection import GridSearchCV
 
 
 from yaml import safe_load
@@ -31,19 +29,6 @@ def save_model(model, save_path):
     joblib.dump(value=model, filename=save_path)
 
 
-# def train_model_grid_search(model, X_train, y_train, param_grid):
-#     # initialize grid search cv
-#     grid_search = GridSearchCV(
-#         estimator = model,
-#         param_grid = param_grid,
-#         cv = 5, 
-#         verbose=2, 
-#         n_jobs=-1
-#     )
-#     grid_search.fit(X_train, y_train)
-
-#     return grid_search.best_estimator_, grid_search.best_params_
-
 def main():
     # current file path
     current_path = Path(__file__)
@@ -66,25 +51,35 @@ def main():
         params = safe_load(f)
     
     # access the parameters of random forest model
-    rf_params = params['train_model']['random_forest_regressor']
+    xgb_params = params['train_model']['xgboost_regressor']
 
     # extract indivisual rf_params
-    n_estimators = rf_params['n_estimators']
-    max_depth = rf_params['max_depth']
-    verbose = rf_params['verbose']
-    n_jobs = rf_params['n_jobs']
+    n_estimators = xgb_params['n_estimators']
+    max_depth = xgb_params['max_depth']
+    learning_rate = xgb_params['learning_rate']
+    colsample_bytree = xgb_params['colsample_bytree']
+    subsample = xgb_params['subsample']
+    min_child_weight = xgb_params['min_child_weight']
+    lambda1 = xgb_params['lambda']
+    alpha = xgb_params['alpha']
 
     # make the model object
-    base_regressor = RandomForestRegressor(n_estimators=n_estimators, max_depth=max_depth, verbose=verbose, n_jobs=n_jobs)
-    base_regressor = train_model(model=base_regressor, X_train=X_train, y_train=y_train)
-    # tuned_regressor = RandomForestRegressor()
-    # tuned_regressor, best_params = train_model_grid_search(model=tuned_regressor, X_train=X_train, y_train=y_train, param_grid=param_grid)
+    xgb_regressor = XGBRegressor(n_estimators=n_estimators, 
+                                 max_depth=max_depth, 
+                                 learning_rate=learning_rate, 
+                                 colsample_bytree=colsample_bytree, 
+                                 subsample= subsample,
+                                 min_child_weight=min_child_weight,
+                                 reg_lambda=lambda1,
+                                 alpha = alpha
+                                 )
+    xgb_regressor = train_model(model=xgb_regressor, X_train=X_train, y_train=y_train)
 
 
     # save the model after traning
     model_output_path = root_path / 'models' / 'models'
     model_output_path.mkdir(exist_ok=True)
-    save_model(model=base_regressor, save_path = model_output_path / 'rf_model.joblib')
+    save_model(model=xgb_regressor, save_path = model_output_path / 'xgb_model.joblib')
 
 if __name__ == '__main__':
     main()

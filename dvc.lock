@@ -159,13 +159,13 @@ stages:
       size: 25319303
     - path: models/models
       hash: md5
-      md5: 73fd90cd9e26c478e69704def109ee97.dir
-      size: 474721
+      md5: 0f795bcd79f77bfc03382cca2b475b51.dir
+      size: 48838369
       nfiles: 1
     - path: src/models/predict_model.py
       hash: md5
-      md5: 3bb74ca79e40166d01f8eb27db48eba0
-      size: 1451
+      md5: 20baab08274329e2abb9dab388671ae4
+      size: 1452
   model_train:
     cmd: python3 src/models/train_model.py data/processed/final/train.csv
     deps:
@@ -175,19 +175,23 @@ stages:
       size: 227827187
     - path: src/models/train_model.py
       hash: md5
-      md5: e7e6282b398104f4611936affdc20562
-      size: 2604
+      md5: dc76c26979879f90829ab83c101c966b
+      size: 2508
     params:
       params.yaml:
-        train_model.random_forest_regressor.max_depth: 6
-        train_model.random_forest_regressor.n_estimators: 50
-        train_model.random_forest_regressor.n_jobs: -1
-        train_model.random_forest_regressor.verbose: 2
+        train_model.xgboost_regressor.alpha: 0.8638051763524134
+        train_model.xgboost_regressor.colsample_bytree: 0.6851584895794796
+        train_model.xgboost_regressor.lambda: 0.2980553084358624
+        train_model.xgboost_regressor.learning_rate: 0.09039281171805601
+        train_model.xgboost_regressor.max_depth: 15
+        train_model.xgboost_regressor.min_child_weight: 61
+        train_model.xgboost_regressor.n_estimators: 249
+        train_model.xgboost_regressor.subsample: 0.9485018772438987
     outs:
     - path: models/models
       hash: md5
-      md5: 73fd90cd9e26c478e69704def109ee97.dir
-      size: 474721
+      md5: 0f795bcd79f77bfc03382cca2b475b51.dir
+      size: 48838369
       nfiles: 1
   plot_of_result:
     cmd: python3 src/visualization/plot_result.py train.csv val.csv
@@ -202,16 +206,16 @@ stages:
       size: 25319303
     - path: models/models
       hash: md5
-      md5: 73fd90cd9e26c478e69704def109ee97.dir
-      size: 474721
+      md5: 0f795bcd79f77bfc03382cca2b475b51.dir
+      size: 48838369
       nfiles: 1
     - path: src/visualization/plot_result.py
       hash: md5
-      md5: 0cb991e931a74949b5e9df69bef87a69
-      size: 2049
+      md5: 5d2ba49474a1e0491a92b7379e88a69f
+      size: 2050
     outs:
     - path: plots/model_results
       hash: md5
-      md5: 6496199e80d4df60b2fd3281c0f27663.dir
-      size: 18250
+      md5: e9bbf50aff509905023341ea1c09837d.dir
+      size: 18878
       nfiles: 1
