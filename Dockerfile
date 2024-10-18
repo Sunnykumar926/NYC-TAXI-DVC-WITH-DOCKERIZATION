@@ -32,7 +32,7 @@ RUN adduser \
 
 RUN --mount=type=cache,target=/root/.cache/pip \
     --mount=type=bind,source=requirements.txt,target=requirements.txt \
-    python3 -m pip install -r requirements.txt
+    python -m pip install -r requirements.txt
 
 
 # Ensure the application is run with non-root user
@@ -49,4 +49,5 @@ COPY requirements.txt .
 EXPOSE 8000
 
 # command to run the app.py when the container starts
-CMD ['python3', app.py]
+CMD ["python", "app.py"]
+
