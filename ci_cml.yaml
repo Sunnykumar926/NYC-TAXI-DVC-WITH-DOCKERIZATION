@@ -1,0 +1,33 @@
+name: CI For Demo
+
+on:
+    push
+
+jobs:
+  build:
+    name: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Install Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      
+      - uses: iterative/setup-cml@v2
+
+      - name: Install Dependencies
+        run : |
+          python -m pip install --upgrade pip
+          pip install -r requirements-action.txt
+
+      - name: Create CML Report/Graphs
+        env :
+          REPO_TOKEN: ${{ secrets.ML_TOKEN }}
+        run: |
+          echo "# Mode Evaluation Results" >> report.md
+          echo "## Bar Graph For Cross Val Scores" >> report.md
+          echo "![](./plots/results.png)" >> report.md
+          cml comment create report.md
