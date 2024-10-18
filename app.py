@@ -7,13 +7,20 @@ from fastapi import FastAPI
 from sklearn.pipeline import Pipeline
 from data_models import PredictionDataset
 
+import warnings
+from sklearn.exceptions import InconsistentVersionWarning
+
+warnings.filterwarnings("ignore", category=InconsistentVersionWarning)
+
+
 app = FastAPI()
 
 current_path = Path(__file__).parent
 
-model_path = current_path / 'models' / 'models' / 'xgb_model.joblib'
-preprocessor_path = current_path/ 'models' / 'transformers' / 'preprocessor.joblib'
-output_transformer_path = current_path/'models'/'transformers'/'output_transformer.joblib'
+
+model_path = current_path / 'container_models' / 'model' / 'xgb_model.joblib'
+preprocessor_path = current_path/ 'container_models' / 'transformers' / 'preprocessor.joblib'
+output_transformer_path = current_path/'container_models'/'transformers'/'output_transformer.joblib'
 
 model = joblib.load(model_path)
 preprocessor = joblib.load(preprocessor_path)
